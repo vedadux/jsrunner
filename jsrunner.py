@@ -56,21 +56,22 @@ def build_html(scripts):
   return os.path.realpath(filename)
 
 
-# waiting for output
-def wait_done(driver):
-  try:
-    wait = WebDriverWait(driver, 20).until(
-          EC.text_to_be_present_in_element((By.ID, "done"), text_="Done!"))
-  except:
-    print("Timeout while waiting for output")
-    pass
-
-
 # get program output
 def get_output(driver):
-  _output = driver.find_element_by_id("output")
-  output = driver.execute_script("return arguments[0].innerText;", _output)
-  return output
+  line = 0
+  while True:
+    try:
+      wait = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.ID, "x" + str(line) + "x")))
+      title = driver.execute_script("return arguments[0].title;", wait)
+      if title == "done": break
+      output = driver.execute_script("return arguments[0].innerText;", wait)
+      sys.stdout.write(output)
+      line += 1
+    except:
+      print("Timeout while waiting for output")
+      break
+  pass
 
 
 if __name__ == "__main__":
@@ -80,8 +81,7 @@ if __name__ == "__main__":
   wait = WebDriverWait(driver, timeout=10)
   filename = build_html(scripts)
   driver.get("file://" + filename)
-  wait_done(driver)
-  sys.stdout.write(get_output(driver))
+  get_output(driver)
   driver.quit()
   os.remove(filename)
   sys.exit(0)

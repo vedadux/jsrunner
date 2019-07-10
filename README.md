@@ -8,9 +8,8 @@ the command line is done through the `log()` function. The output relies on the
 presence of DOM elements, so any code that logs output must be placed in a 
 function called `main()` to ensure that the DOM is completely loaded.
 
-In the current version, the output is only available once the code terminates
-through the `exit()` function. A live output version is planned but not complete
-as of now.
+The program is terminated once the `exit()` function is called. All the output
+produced thorugh the `log()` function is shown in real time in the console.
 
 # Usage
 
